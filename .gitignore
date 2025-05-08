@@ -6,8 +6,9 @@ sbatch_scripts/
 /ignore
 /TEMcode/2024-10-22/run0/model
 /TEMcode/2024-10-22/run0/save
-/TEMcode/2024-10-22/run0/script/_pycache_
+/TEMcode/2024-10-22/run0/script/__pycache__
 /TEMcode/2024-10-22/run0/script/run_lstm.py
+/TEMcode/2024-10-22/run0/script/test.py
 /TEMcode/2024-10-22/run0/train
 /TEMcode/2024-10-22/run0/report.log
 
