@@ -1,0 +1,17 @@
+data/
+.vscode/
+outputs/
+masks/
+sbatch_scripts/
+/ignore
+
+
+lme_permutation_valence.R
+lme_permutation_anova.R
+lme.py
+lme_permutation_valence.R
+lme_permutation_TEMtoRating.R
+lme_permutation_selfreport.R
+lme_permutation_selfreport_aphc.R
+lme_permutation_it42000.R
+lme_permutation_it50000.R
