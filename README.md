@@ -9,9 +9,9 @@ The MATLAB interface used for creating TEM environments is available [here](http
 
 Code for training TEM model is adapted from [here](https://github.com/jbakermans/torch_tem) (python >= 3.6.0 and pytorch >= 1.6.0 required).
 To train the TEM model, navigate to the following directory:
-<pre><code>```bash cd TEMcode/2024-10-22/run0/script/ ```</code></pre>
+<pre><code>cd TEMcode/2024-10-22/run0/script/</code></pre>
 Then run the following command:
-<pre><code>```bash python run.py --env_file ./envs/11x11_square_obs45_act5.json \ --n_train_iterations 1000000 \ --load_existing_model False ```</code></pre>
+<pre><code>python run.py --env_file ./envs/11x11_square_obs45_act5.json \ --n_train_iterations 1000000 \ --load_existing_model False</code></pre>
 
 ## Dataset
 The EmoFilM fMRI data can be downloaded by running
