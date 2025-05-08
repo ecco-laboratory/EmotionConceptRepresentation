@@ -4,6 +4,12 @@ outputs/
 masks/
 sbatch_scripts/
 /ignore
+TEMcode/model/
+TEMcode/save/
+TEMcode/script/_pycache_/
+TEMcode/script/run_lstm.py
+TEMcode/train
+TEMcode/report.log
 
 
 lme_permutation_valence.R

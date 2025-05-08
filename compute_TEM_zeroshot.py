@@ -1,5 +1,5 @@
 import sys
-sys.path.append('/home/yma/EmoTEM/scripts/perceptual')
+sys.path.append('./TEMcode/2024-10-22/run0/script')
 
 import pandas as pd
 import numpy as np
@@ -45,9 +45,9 @@ walk_random_seed = 42
 random.seed(walk_random_seed)
 n_random_walkers = 10
 # Make list of all the environments that this model was trained on
-envs_dir = '/home/yma/EmoTEM/scripts/perceptual/envs/emofilm/'
+envs_dir = './TEMenvs/emofilm/'
 envs = list(glob.glob(envs_dir + '11x11_13categories_MDSseed121_14brainmovies.json'))#list(glob.glob(envs_dir + '*.json'))
-tem_dir = '/home/yma/EmoTEM/scripts/perceptual/Summaries/'
+tem_dir = './TEMcode'
 
 result_folder = os.path.join('./outputs/TEM_performace/across_movies/MDSseed121')
 os.makedirs(result_folder, exist_ok=True)

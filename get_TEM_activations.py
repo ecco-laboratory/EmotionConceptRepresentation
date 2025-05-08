@@ -1,5 +1,5 @@
 import sys
-sys.path.append('/home/yma/EmoTEM/scripts/perceptual')
+sys.path.append('./TEMcode/2024-10-22/run0/script')
 
 from collections import defaultdict
 import numpy as np
@@ -87,7 +87,7 @@ run = '0' # '0'
 ##min_index = 200000
 #max_index = 200000 # '32000'
 #its_to_process = list(range(min_index, max_index, 1000))+[max_index]
-its_to_process = [48000]#[40000, 50000, 32000]#[32000]
+its_to_process = [40000, 50000, 32000]#[32000]
 parser = argparse.ArgumentParser(description="Get TEM activations with a specified random seed.")
 parser.add_argument(
     "--seed",
@@ -99,9 +99,9 @@ walk_random_seed = parser.parse_args().seed
 random.seed(walk_random_seed)
 n_random_walkers = 29
 # Make list of all the environments that this model was trained on
-envs_dir = '/home/yma/EmoTEM/scripts/perceptual/envs/emofilm/'
+envs_dir = './TEMenvs/emofilm/'
 envs = list(glob.glob(envs_dir + '11x11_13categories_MDSseed468_14brainmovies.json'))#list(glob.glob(envs_dir + '*.json'))
-tem_dir = '/home/yma/EmoTEM/scripts/perceptual/Summaries/'
+tem_dir = './TEMcode'
 
 result_folder = os.path.join('.', 'outputs', 'TEM_activation', 'across_movies', 'MDSseed468')
 os.makedirs(result_folder, exist_ok=True)
