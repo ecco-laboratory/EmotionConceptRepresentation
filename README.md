@@ -15,4 +15,4 @@ Then run the following command:
 
 ## Dataset
 The EmoFilM fMRI data can be downloaded by running
-aws s3 sync --no-sign-request s3://openneuro.org/ds004892/derivatives/preprocessing/ path_to_project_folder/data/fmri
+<pre><code>aws s3 sync --no-sign-request s3://openneuro.org/ds004892/derivatives/preprocessing/ path_to_project_folder/data/fmri</code></pre>
