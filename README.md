@@ -1,4 +1,5 @@
-# The representation of emotion in hippocampal-prefrontal systems
+# The representation of emotion knowledge in hippocampal-prefrontal systems
+
 
 ## Dependencies 
 Instructions for installing CANlab Core Tools which provided many of the functions and Neuroimaging Pattern Masks used in the analyses can be found [here](https://canlab.github.io/_pages/canlab_help_1_installing_tools/canlab_help_1_installing_tools.html).
