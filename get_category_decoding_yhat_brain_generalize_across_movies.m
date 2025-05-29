@@ -1,13 +1,12 @@
 clear all; close all; clc;
-%% Define relevant script-specific constants
+
 folder_project = fileparts(mfilename('fullpath'));
+%% Add paths (change this to where you have the dependencies installed)
 addpath(genpath('/home/data/eccolab/Code/GitHub/Neuroimaging_Pattern_Masks/'))
 addpath(genpath('/home/data/eccolab/Code/GitHub/CanlabCore'))
 addpath('/home/data/eccolab/Code/GitHub/spm12')
 
-% The string after subject, session, task, and other changing items in the BIDS-compatible filename
 bold_suffix = 'space-MNI_desc-ppres_bold.nii';
-% STUDY-SPECIFIC! SHOULD BE AN ARG
 tr_length = 1.3;
 
 stim_names = {
@@ -15,7 +14,6 @@ stim_names = {
 'First_Bite', 'Lesson_Learned', 'Payload', 'Riding_The_Rails', 'Sintel', 'Spaceman', ...
 'Superhero', 'Tears_of_Steel', 'The_secret_number', 'To_Claire_From_Sonny', 'You_Again'
 };
-% FOR DEBUG/TEST ONLY. DELETE WHEN THIS IS A FUNCTION ARG
 bids_task_names = {
 'AfterTheRain', 'BetweenViewings', 'BigBuckBunny', 'Chatter', 'DamagedKungFu', ...
 'FirstBite', 'LessonLearned', 'Payload', 'RidingTheRails', 'Sintel', 'Spaceman', ...
@@ -29,7 +27,6 @@ if ~exist(output_dir, 'dir')
 end
 
 
-
 brain_atlas = load_atlas('canlab2018');
 region_masks = {fullfile(folder_project, 'masks', 'HC_Julich.nii.gz'),...%select_atlas_subset(brain_atlas, {'Ctx_H'}),...
                 fullfile(folder_project, 'masks', 'ERC_Julich.nii.gz'),...%select_atlas_subset(brain_atlas, {'Ctx_EC'}),...
@@ -39,8 +36,8 @@ region_masks = {fullfile(folder_project, 'masks', 'HC_Julich.nii.gz'),...%select
 region_names = {'Hippocampus', 'EntorhinalCortex', 'vmPFC_a24_included', 'anteriorHippocampus', 'posteriorHippocampus'};
 
 
-% Brain folder should go directly to the folder containing the subject subfolders
-folder_brain_5subs = '/home/data/eccolab/VisionLanguageEncodingEmotion/Code/EmotionConcepts/data/aws/';
+% Brain folder should go directly to the folder containing the subject subfolders (change this to where you have the data)
+folder_brain_5subs = fullfile(folder_project, 'data', 'aws');
 subjects_5 = {'sub-S22', 'sub-S25', 'sub-S26', 'sub-S29', 'sub-S32'};
 folder_brain_24subs = '/home/data/eccolab/OpenNeuro/ds004892/derivatives/preprocessing/';
 subjects_24 = {dir(fullfile(folder_brain_24subs, 'sub-*')).name};
@@ -113,14 +110,14 @@ for s = 1:num_subjects
             emotions = emotions_all{e};
 
             if strcmp(emotion_types{e}, 'binary_valence_arousal') || strcmp(emotion_types{e}, 'binary_valence')
-                beh_data = load('/home/data/eccolab/VisionLanguageEncodingEmotion/Code/EmotionConcepts/outputs/binary_valence_arousal_beTab.mat');
+                beh_data = load(fullfile(folder_project, 'data', 'binary_valence_arousal_beTab.mat'));
             else
-                beh_data = load('/home/data/eccolab/VisionLanguageEncodingEmotion/BehavioralRatingsPerVideoAndDim.mat');
+                beh_data = load(fullfile(folder_project, 'data', 'BehavioralRatingsPerVideoAndDim.mat'));
             end
             %% Load behavioral ratings
             behTab = beh_data.behTab;
 
-            % Subset ratings to only include emotion categories
+            % Subset ratings to only include relevant emotions
             behTab = structfun(@(tbl) tbl(:, emotions(ismember(emotions, tbl.Properties.VariableNames))), behTab, 'UniformOutput', false);
             category_names = behTab.(bids_task_names{1}).Properties.VariableNames;
             
@@ -162,7 +159,7 @@ for s = 1:num_subjects
                         masked_dat_current_movie = masked_dat_current_movie';  % Transpose to time x voxels
 
                         if ~isfield(all_regions_concat_bold, region_names{r})
-                            all_regions_concat_bold.(region_names{r}) = []; % Initialize the field as an empty array
+                            all_regions_concat_bold.(region_names{r}) = []; 
                         end
                         all_regions_concat_bold.(region_names{r}) = [all_regions_concat_bold.(region_names{r}); masked_dat_current_movie];
                     end

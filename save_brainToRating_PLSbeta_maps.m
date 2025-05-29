@@ -1,15 +1,13 @@
 clear all; close all; clc;
-%% Define relevant script-specific constants
-folder_project = fileparts(mfilename('fullpath'));
 
+folder_project = fileparts(mfilename('fullpath'));
+%% Add paths (change this to where you have the dependencies installed)
 addpath(genpath('/home/data/eccolab/Code/GitHub/Neuroimaging_Pattern_Masks/'))
 addpath(genpath('/home/data/eccolab/Code/GitHub/CanlabCore'))
 addpath('/home/data/eccolab/Code/GitHub/spm12')
 
 
-% The string after subject, session, task, and other changing items in the BIDS-compatible filename
 bold_suffix = 'space-MNI_desc-ppres_bold.nii';
-% STUDY-SPECIFIC! SHOULD BE AN ARG
 tr_length = 1.3;
 
 stim_names = {
@@ -17,7 +15,6 @@ stim_names = {
 'First_Bite', 'Lesson_Learned', 'Payload', 'Riding_The_Rails', 'Sintel', 'Spaceman', ...
 'Superhero', 'Tears_of_Steel', 'The_secret_number', 'To_Claire_From_Sonny', 'You_Again'
 };
-% FOR DEBUG/TEST ONLY. DELETE WHEN THIS IS A FUNCTION ARG
 bids_task_names = {
 'AfterTheRain', 'BetweenViewings', 'BigBuckBunny', 'Chatter', 'DamagedKungFu', ...
 'FirstBite', 'LessonLearned', 'Payload', 'RidingTheRails', 'Sintel', 'Spaceman', ...
@@ -34,8 +31,8 @@ region_names = {'Hippocampus', 'EntorhinalCortex'};%, 'vmPFC'};
 region_masks = {select_atlas_subset(brain_atlas, {'Ctx_10','Ctx_11','Ctx_14','Ctx_25','Ctx_32', 'a24_'})};
 region_names = {'vmPFC'};
 %}
-% Brain folder should go directly to the folder containing the subject subfolders
-folder_brain_5subs = '/home/data/eccolab/VisionLanguageEncodingEmotion/Code/EmotionConcepts/data/aws/';
+% Brain folder should go directly to the folder containing the subject subfolders (change this to where you have the data)
+folder_brain_5subs = fullfile(folder_project, 'data', 'aws');
 subjects_5 = {'sub-S22', 'sub-S25', 'sub-S26', 'sub-S29', 'sub-S32'};
 folder_brain_24subs = '/home/data/eccolab/OpenNeuro/ds004892/derivatives/preprocessing/';
 subjects_24 = {dir(fullfile(folder_brain_24subs, 'sub-*')).name};
@@ -50,7 +47,6 @@ num_movies = length(used_movies);
 num_subjects = length(subjects);
 
 %% CV PLS regression across movies for each region and subject
-% Loop through regions and subjects
 for s = 1:num_subjects
     if ismember(subjects{s}, subjects_5)
         folder_brain = folder_brain_5subs;
@@ -64,7 +60,6 @@ for s = 1:num_subjects
         for t = used_movies
             task = bids_task_names{t};
             for session = sessions
-                % Construct file path for the current subject and movie task
                 file = [folder_brain subjects{s}  '/' session{1} '/func/'  subjects{s} '_' session{1} '_task-' task '_' bold_suffix];
                 if exist(file, 'file')
                     fprintf('Found file %s\n', file);
@@ -95,11 +90,10 @@ for s = 1:num_subjects
         %save a heatmap of the masked data for Hippocampus (jet colormap) to fullfile(folder_project, 'outputs')
         %figure; imagesc(masked_dat_all_movies.Hippocampus.dat'); colormap(jet); 
         %caxis([-150, 150]); colorbar; 
-        %set(gca,'XTick',[], 'YTick', []); saveas(gcf, fullfile('/home/data/eccolab/VisionLanguageEncodingEmotion/Code/EmotionConcepts/outputs', 'BOLDheatmap_Hippocampus_sub-S01.png'));
+        %set(gca,'XTick',[], 'YTick', []); saveas(gcf, fullfile(folder_project, 'outputs', 'BOLDheatmap_Hippocampus_sub-S01.png'));
 
         
         n_trs = [1, n_trs];
-        % List of categories to retain
 
         for type = {'valenceArousal'}%{'category'}%{'binaryValenceArousal'}%%% 'valenceArousal','binaryValenceArousal'}% {'valenceArousal', 'binaryValenceArousal'}%
             if strcmp(type{1}, 'category')
@@ -118,10 +112,10 @@ for s = 1:num_subjects
                 folder_name = 'valence_arousal';
             end
             behTab = beh_data.behTab;
-            % Subset ratings to only include emotion categories
+            % Subset ratings to only include the relevant emotions
             behTab = structfun(@(tbl) tbl(:, emotions(ismember(emotions, tbl.Properties.VariableNames))), behTab, 'UniformOutput', false);
             category_names = behTab.(bids_task_names{1}).Properties.VariableNames;
-            % Output directory
+
             output_dir = fullfile(folder_project, 'outputs', 'brain_weight_maps', 'PLSbeta', 'brainToRatings', folder_name);
             if ~exist(output_dir, 'dir')
                 mkdir(output_dir);
@@ -164,7 +158,7 @@ for s = 1:num_subjects
                         masked_dat_current_movie = masked_dat_current_movie';  % Transpose to time x voxels
 
                         if ~isfield(all_regions_concat_bold, region_names{r})
-                            all_regions_concat_bold.(region_names{r}) = []; % Initialize the field as an empty array
+                            all_regions_concat_bold.(region_names{r}) = []; 
                         end
                         all_regions_concat_bold.(region_names{r}) = [all_regions_concat_bold.(region_names{r}); masked_dat_current_movie];
                     end

@@ -1,6 +1,6 @@
 clear all; close all; clc;
-%% Define relevant script-specific constants
 folder_project = fileparts(mfilename('fullpath'));
+%% Add paths (change this to where you have the dependencies installed)
 addpath(genpath('/home/data/eccolab/Code/GitHub/Neuroimaging_Pattern_Masks/'))
 addpath(genpath('/home/data/eccolab/Code/GitHub/CanlabCore'))
 addpath('/home/data/eccolab/Code/GitHub/spm12')
@@ -10,17 +10,14 @@ stim_names = {
 'First_Bite', 'Lesson_Learned', 'Payload', 'Riding_The_Rails', 'Sintel', 'Spaceman', ...
 'Superhero', 'Tears_of_Steel', 'The_secret_number', 'To_Claire_From_Sonny', 'You_Again'
 };
-% FOR DEBUG/TEST ONLY. DELETE WHEN THIS IS A FUNCTION ARG
 bids_task_names = {
 'AfterTheRain', 'BetweenViewings', 'BigBuckBunny', 'Chatter', 'DamagedKungFu', ...
 'FirstBite', 'LessonLearned', 'Payload', 'RidingTheRails', 'Sintel', 'Spaceman', ...
 'Superhero', 'TearsOfSteel', 'TheSecretNumber', 'ToClaireFromSonny', 'YouAgain'
 };
 
-%beh_data = load(fullfile(folder_project, 'data', 'BehavioralRatingsPerVideoAndDim.mat'));
-beh_data = load('/home/data/eccolab/VisionLanguageEncodingEmotion/BehavioralRatingsPerVideoAndDim.mat')
+beh_data = load(fullfile(folder_project, 'data', 'BehavioralRatingsPerVideoAndDim.mat'));
 behTab = beh_data.behTab;
-% List of categories to retain
 emotions_category = {'Anger', 'Anxiety', 'Fear', 'Surprise', 'Guilt', 'Disgust', ...
 'Sad', 'Regard', 'Satisfaction', 'WarmHeartedness', 'Happiness', ...
 'Pride', 'Love'};
@@ -54,9 +51,7 @@ frequency_names_allcomponents = {{'freq01234'},...%for p
                    };
 
 %% Specify paths and constants for brain
-% The string after subject, session, task, and other changing items in the BIDS-compatible filename
 bold_suffix = 'space-MNI_desc-ppres_bold.nii';
-% STUDY-SPECIFIC! SHOULD BE AN ARG
 tr_length = 1.3;
 
 brain_atlas = load_atlas('canlab2018');
@@ -65,12 +60,9 @@ region_masks = {fullfile(folder_project, 'masks', 'HC_Julich.nii.gz'),...
                 fullfile(folder_project, 'masks', 'ERC_Julich.nii.gz'),...
                 select_atlas_subset(brain_atlas, {'Ctx_10','Ctx_11','Ctx_14','Ctx_25','Ctx_32', 'a24_'})};
 region_names = {'Hippocampus', 'EntorhinalCortex', 'vmPFC'};
-%{
-region_masks = {select_atlas_subset(brain_atlas, {'Ctx_10','Ctx_11','Ctx_14','Ctx_25','Ctx_32', 'a24_'})};
-region_names = {'vmPFC'};
-%}
-% Brain folder should go directly to the folder containing the subject subfolders
-folder_brain_5subs = '/home/data/eccolab/VisionLanguageEncodingEmotion/Code/EmotionConcepts/data/aws/';
+
+% Brain folder should go directly to the folder containing the subject subfolders (change this to where you have the data)
+folder_brain_5subs = fullfile(folder_project, 'data', 'aws');
 subjects_5 = {'sub-S22', 'sub-S25', 'sub-S26', 'sub-S29', 'sub-S32'};
 folder_brain_24subs = '/home/data/eccolab/OpenNeuro/ds004892/derivatives/preprocessing/';
 subjects_24 = {dir(fullfile(folder_brain_24subs, 'sub-*')).name};
@@ -86,7 +78,6 @@ num_subjects = length(subjects);
 
 tv = struct(); 
 subjnames = struct();
-%% Main loop
 for s = 1:num_subjects
     if ismember(subjects{s}, subjects_5)
         folder_brain = folder_brain_5subs;
@@ -155,7 +146,7 @@ for s = 1:num_subjects
                     masked_dat_current_movie = masked_dat_current_movie';  % Transpose to time x voxels
 
                     if ~isfield(all_regions_concat_bold, region_names{r})
-                        all_regions_concat_bold.(region_names{r}) = []; % Initialize the field as an empty array
+                        all_regions_concat_bold.(region_names{r}) = []; 
                     end
                     all_regions_concat_bold.(region_names{r}) = [all_regions_concat_bold.(region_names{r}); masked_dat_current_movie];
                 end
@@ -166,7 +157,7 @@ for s = 1:num_subjects
 
         for iter = TEM_iterations
             TEM_iteration = iter{1};
-            % Output directory
+
             output_dir = fullfile(folder_project, 'outputs', 'brain_weight_maps', 'PLSbeta', 'brainToTEM', 'MDSseed121');
             output_dir = fullfile(output_dir, sprintf('iteration%d', TEM_iteration), sprintf('walkRandomSeed%d', walk_random_seed));
             if ~exist(output_dir, 'dir')
@@ -223,7 +214,7 @@ for s = 1:num_subjects
                         for f_group = 1:num_freqs
                             fprintf('Running PLS regression for region %s, walker %s, component %s, and frequency %s\n', region_names{r}, tem_s{1}, component_name, frequency_names{f_group});
                             concat_pg = concat_pg_activation_ts_allFreqGroups.(frequency_names{f_group});
-                            % Run PLS regression and compute performance
+
                             [~, ~, ~, ~, b] = plsregress(concat_bold, concat_pg, pls_n_components);
                             plsbetas = b(2:end, :);
 
@@ -254,7 +245,7 @@ for s = 1:num_subjects
                             if tem_s_idx == 1
                                 subj_avg.(region_names{r}).(component_name) = freqAvg_plsbetas;
                             else
-                                % Online averaging within subject
+
                                 disp(tem_s_idx)
                                 disp(tem_s_idx - 1)
                                 disp(size(subj_avg))
@@ -355,7 +346,6 @@ function pg_activation_ts = generate_pg_activation_timeseries(pg_json_data, freq
                 error('Category "%s" not found in frequency "%s".', category_name, freq_key);
             end
 
-            % Get the activation data for the current category
             cat_activation = freq_data.(category_name);
 
             % Ensure the activation data is a column vector (num_cells x 1)
@@ -363,26 +353,21 @@ function pg_activation_ts = generate_pg_activation_timeseries(pg_json_data, freq
                 error('Activation data for category "%s" in frequency "%s" must be a column vector.', category_name, freq_key);
             end
 
-            % Concatenate activations for all categories horizontally
             freq_cat_activation = [freq_cat_activation, cat_activation];
         end
 
-        % Store the horizontally concatenated activations for this frequency
         all_activation_data = [all_activation_data; freq_cat_activation];
     end
 
     % Get the total number of cells across all frequencies
     num_cells = size(all_activation_data, 1);
 
-    % Initialize the output timeseries matrix
     pg_activation_ts= zeros(num_timepoints, num_cells);
 
-    % Compute the weighted average for each time point
     for t = 1:num_timepoints
         % Get the weights for each category at time t
         weights = category_rating_ts(t, :);
 
-        % Normalize the weights to sum to 1
         weights = weights / sum(weights);
 
         % Compute the weighted average activation for this time point
@@ -391,23 +376,13 @@ function pg_activation_ts = generate_pg_activation_timeseries(pg_json_data, freq
         for cat_idx = 1:num_categories
             category_weight = weights(cat_idx);
 
-            % Get the activation data for the current category
             category_activation = all_activation_data(:, cat_idx);
 
-            % Apply the weighting
             weighted_activation = weighted_activation + category_weight * category_activation;
         end
         pg_activation_ts(t, :) = weighted_activation';
     end
 end
 
-
-data = fmri_data('/home/data/eccolab/VisionLanguageEncodingEmotion/Code/EmotionConcepts/data/aws/sub-S22/ses-1/func/sub-S22_ses-1_task-Superhero_space-MNI_desc-ppres_bold.nii');
-data = apply_mask(data, '/home/data/eccolab/VisionLanguageEncodingEmotion/Code/EmotionConcepts/masks/HC_Julich.nii.gz');
-tv = data;
-tv.dat = rand(size(data.dat, 1), 29);
-tv = replace_empty(tv);
-tv.removed_images = zeros(size(tv.dat, 2),1);
-tv = remove_empty(tv);
 
 

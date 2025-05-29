@@ -1,12 +1,12 @@
 clear all; close all; clc;
-%% Define relevant script-specific constants
+
+%% Add paths (change this to where you have the dependencies installed)
 folder_project = fileparts(mfilename('fullpath'));
 addpath(genpath('/home/data/eccolab/Code/GitHub/Neuroimaging_Pattern_Masks/'))
 addpath(genpath('/home/data/eccolab/Code/GitHub/CanlabCore'))
 addpath('/home/data/eccolab/Code/GitHub/spm12')
 
 
-%paths and constants
 emo_types = {'category','binary_valence_arousal', 'valence_arousal'};
 emotions_category = {'Anger', 'Anxiety', 'Fear', 'Surprise', 'Guilt', 'Disgust', ...
                     'Sad', 'Regard', 'Satisfaction', 'WarmHeartedness', 'Happiness', ...
@@ -26,7 +26,7 @@ for i = 1:length(regions)
         end
         for k = 1:length(thres)
             threshold = thres{k};
-            % PLSbetas_UNC05_Hippocampus_Guilt.nii
+            % e.g., PLSbetas_UNC05_Hippocampus_Guilt.nii
             file_dirs = dir(fullfile(map_dir, emo_type,'nifti',['PLSbetas_',threshold,'_',region,'*.nii']));
             file_dirs = file_dirs(contains({file_dirs.name}, emotions));
             %create conjunction map (normalized number of of emotions that have value in each voxel, separately for negative and positive values)

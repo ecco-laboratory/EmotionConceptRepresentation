@@ -1,12 +1,13 @@
 clear all; close all; clc;
-%% Define relevant script-specific constants
+
 folder_project = fileparts(mfilename('fullpath'));
+%% Add paths (change this to where you have the dependencies installed)
 addpath(genpath('/home/data/eccolab/Code/GitHub/Neuroimaging_Pattern_Masks/'))
 addpath(genpath('/home/data/eccolab/Code/GitHub/CanlabCore'))
 addpath('/home/data/eccolab/Code/GitHub/spm12')
 
 
-%paths and constants
+
 components = {'p', 'g'};
 freqs = {'freq4', 'freq3', 'freq2', 'freq1', 'freq0'};
 regions = {'Hippocampus', 'EntorhinalCortex', 'vmPFC'};

@@ -1,5 +1,6 @@
 clear all; close all; clc;
-%% Define relevant script-specific constants
+
+%% Add paths (change this to where you have the dependencies installed)
 folder_project = fileparts(mfilename('fullpath'));
 addpath(genpath('/home/data/eccolab/Code/GitHub/Neuroimaging_Pattern_Masks/'))
 addpath(genpath('/home/data/eccolab/Code/GitHub/CanlabCore'))
@@ -10,17 +11,14 @@ stim_names = {
 'First_Bite', 'Lesson_Learned', 'Payload', 'Riding_The_Rails', 'Sintel', 'Spaceman', ...
 'Superhero', 'Tears_of_Steel', 'The_secret_number', 'To_Claire_From_Sonny', 'You_Again'
 };
-% FOR DEBUG/TEST ONLY. DELETE WHEN THIS IS A FUNCTION ARG
 bids_task_names = {
 'AfterTheRain', 'BetweenViewings', 'BigBuckBunny', 'Chatter', 'DamagedKungFu', ...
 'FirstBite', 'LessonLearned', 'Payload', 'RidingTheRails', 'Sintel', 'Spaceman', ...
 'Superhero', 'TearsOfSteel', 'TheSecretNumber', 'ToClaireFromSonny', 'YouAgain'
 };
 
-%beh_data = load(fullfile(folder_project, 'data', 'BehavioralRatingsPerVideoAndDim.mat'));
-beh_data = load('/home/data/eccolab/VisionLanguageEncodingEmotion/BehavioralRatingsPerVideoAndDim.mat')
+beh_data = load(fullfile(folder_project, 'data', 'BehavioralRatingsPerVideoAndDim.mat'));
 behTab = beh_data.behTab;
-% List of categories to retain
 emotions_category = {'Anger', 'Anxiety', 'Fear', 'Surprise', 'Guilt', 'Disgust', ...
 'Sad', 'Regard', 'Satisfaction', 'WarmHeartedness', 'Happiness', ...
 'Pride', 'Love'};
@@ -62,9 +60,7 @@ frequency_names_allcomponents = {{'freq01', 'freq234'}...%for p
 %}
 
 %% Specify paths and constants for brain
-% The string after subject, session, task, and other changing items in the BIDS-compatible filename
 bold_suffix = 'space-MNI_desc-ppres_bold.nii';
-% STUDY-SPECIFIC! SHOULD BE AN ARG
 tr_length = 1.3;
 
 brain_atlas = load_atlas('canlab2018');
@@ -80,8 +76,8 @@ region_names = {'anteriorHippocampus', 'posteriorHippocampus'};
 %}
 
 
-% Brain folder should go directly to the folder containing the subject subfolders
-folder_brain_5subs = '/home/data/eccolab/VisionLanguageEncodingEmotion/Code/EmotionConcepts/data/aws/';
+% Brain folder should go directly to the folder containing the subject subfolders (change this to where you have the data)
+folder_brain_5subs = fullfile(folder_project, 'data', 'aws');
 subjects_5 = {'sub-S22', 'sub-S25', 'sub-S26', 'sub-S29', 'sub-S32'};
 folder_brain_24subs = '/home/data/eccolab/OpenNeuro/ds004892/derivatives/preprocessing/';
 subjects_24 = {dir(fullfile(folder_brain_24subs, 'sub-*')).name};
@@ -95,7 +91,6 @@ selected_regions = 1:length(region_masks);
 num_regions = length(selected_regions);
 num_subjects = length(subjects);
 
-%% Main loop
 for s = 1:num_subjects
     if ismember(subjects{s}, subjects_5)
         folder_brain = folder_brain_5subs;
@@ -164,7 +159,7 @@ for s = 1:num_subjects
                     masked_dat_current_movie = masked_dat_current_movie';  % Transpose to time x voxels
 
                     if ~isfield(all_regions_concat_bold, region_names{r})
-                        all_regions_concat_bold.(region_names{r}) = []; % Initialize the field as an empty array
+                        all_regions_concat_bold.(region_names{r}) = []; 
                     end
                     all_regions_concat_bold.(region_names{r}) = [all_regions_concat_bold.(region_names{r}); masked_dat_current_movie];
                 end
@@ -175,7 +170,6 @@ for s = 1:num_subjects
 
         for iter = TEM_iterations
             TEM_iteration = iter{1};
-            % Output directory
             output_dir = fullfile(folder_project, 'outputs', 'rep3', 'ratings_prediction_performance', 'brainToTEM', 'MDSseed121');
             output_dir = fullfile(output_dir, sprintf('iteration%d', TEM_iteration), sprintf('walkRandomSeed%d', walk_random_seed));
             if ~exist(output_dir, 'dir')
@@ -283,15 +277,12 @@ function pg_activation_ts = generate_pg_activation_timeseries(pg_json_data, freq
         error('The number of category names must match the number of columns in category_rating_ts.');
     end
     all_activation_data = [];
-    % Iterate over the specified frequencies in freq_group
     for freq_idx = 1:length(freq_group)
         freq_key = freq_group{freq_idx};
         if ~isfield(pg_json_data, freq_key)
             error('Frequency key "%s" not found in the JSON data.', freq_key);
         end
-        % Get the activation data for all categories in the current frequency
         freq_data = pg_json_data.(freq_key);
-        % Initialize a cell array to hold activation data for this frequency
         freq_cat_activation = [];
         for cat_idx = 1:num_categories
             category_name = category_names{cat_idx};
@@ -307,29 +298,21 @@ function pg_activation_ts = generate_pg_activation_timeseries(pg_json_data, freq
                 error('Activation data for category "%s" in frequency "%s" must be a column vector.', category_name, freq_key);
             end
 
-            % Concatenate activations for all categories horizontally
             freq_cat_activation = [freq_cat_activation, cat_activation];
         end
 
-        % Store the horizontally concatenated activations for this frequency
         all_activation_data = [all_activation_data; freq_cat_activation];
     end
 
     % Get the total number of cells across all frequencies
     num_cells = size(all_activation_data, 1);
 
-    % Initialize the output timeseries matrix
     pg_activation_ts= zeros(num_timepoints, num_cells);
 
     % Compute the weighted average for each time point
     for t = 1:num_timepoints
-        % Get the weights for each category at time t
         weights = category_rating_ts(t, :);
-
-        % Normalize the weights to sum to 1
         weights = weights / sum(weights);
-
-        % Compute the weighted average activation for this time point
         weighted_activation = zeros(num_cells, 1);
 
         for cat_idx = 1:num_categories
@@ -347,34 +330,27 @@ end
 
 
 function behTab_category = shuffleTableCategories(behTab_category)
-    % Define the category shuffle mapping as a containers.Map
     category_mapping = containers.Map({'Disgust', 'Anger', 'Anxiety', 'Fear', 'Sad', 'Guilt', 'Love', ...
                                        'Surprise', 'WarmHeartedness', 'Regard', 'Pride', 'Happiness', 'Satisfaction'}, ...
                                       {'Anxiety', 'Satisfaction', 'Fear', 'Disgust', 'WarmHeartedness', 'Regard', 'Happiness', ...
                                        'Love', 'Anger', 'Guilt', 'Sad', 'Pride', 'Surprise'});
 
-    % Get all field names (table names) in behTab_category
     table_names = fieldnames(behTab_category);
 
-    % Loop through each table in the struct
     for i = 1:numel(table_names)
-        table_name = table_names{i};  % Get current table name
-        original_table = behTab_category.(table_name);  % Extract table
+        table_name = table_names{i};
+        original_table = behTab_category.(table_name);
 
-        % Create a new table with  columns
-        new_table = original_table; % Copy structure
+        new_table = original_table;
 
         for old_key = keys(category_mapping)
-            old_key = old_key{1};  % Convert to string
-            if ismember(old_key, original_table.Properties.VariableNames) % Check if column exists
-                new_key = category_mapping(old_key);  % Get the mapped column name
-
-                % Assign the values from the old column to the new column
+            old_key = old_key{1};
+            if ismember(old_key, original_table.Properties.VariableNames)
+                new_key = category_mapping(old_key);
                 new_table.(new_key) = original_table.(old_key);
             end
         end
-
-        % Store the  table back in the struct
+        
         behTab_category.(table_name) = new_table;
     end
 end
