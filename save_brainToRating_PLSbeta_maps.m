@@ -1,11 +1,4 @@
-clear all; close all; clc;
-
-folder_project = fileparts(mfilename('fullpath'));
-%% Add paths (change this to where you have the dependencies installed)
-addpath(genpath('/home/data/eccolab/Code/GitHub/Neuroimaging_Pattern_Masks/'))
-addpath(genpath('/home/data/eccolab/Code/GitHub/CanlabCore'))
-addpath('/home/data/eccolab/Code/GitHub/spm12')
-
+set_up_paths_and_data_directories;
 
 bold_suffix = 'space-MNI_desc-ppres_bold.nii';
 tr_length = 1.3;
@@ -24,20 +17,15 @@ bids_task_names = {
 brain_atlas = load_atlas('canlab2018');
 
 region_masks = {fullfile(folder_project, 'masks', 'HC_Julich.nii.gz'),...
-                fullfile(folder_project, 'masks', 'ERC_Julich.nii.gz')};%,...
-                %select_atlas_subset(brain_atlas, {'Ctx_10','Ctx_11','Ctx_14','Ctx_25','Ctx_32', 'a24_'})};
-region_names = {'Hippocampus', 'EntorhinalCortex'};%, 'vmPFC'};
-%{
-region_masks = {select_atlas_subset(brain_atlas, {'Ctx_10','Ctx_11','Ctx_14','Ctx_25','Ctx_32', 'a24_'})};
-region_names = {'vmPFC'};
-%}
+                fullfile(folder_project, 'masks', 'ERC_Julich.nii.gz'),...
+                select_atlas_subset(brain_atlas, {'Ctx_10','Ctx_11','Ctx_14','Ctx_25','Ctx_32', 'a24_'})};
+region_names = {'Hippocampus', 'EntorhinalCortex', 'vmPFC'};
+
+
 % Brain folder should go directly to the folder containing the subject subfolders (change this to where you have the data)
-folder_brain_5subs = fullfile(folder_project, 'data', 'aws');
-subjects_5 = {'sub-S22', 'sub-S25', 'sub-S26', 'sub-S29', 'sub-S32'};
-folder_brain_24subs = '/home/data/eccolab/OpenNeuro/ds004892/derivatives/preprocessing/';
-subjects_24 = {dir(fullfile(folder_brain_24subs, 'sub-*')).name};
-subjects_24 = setdiff(subjects_24, [subjects_5, 'sub-S07']);  %drop S07 and the 5 subjects from the 5 subject set
-subjects = [subjects_24, subjects_5];
+folder_brain = fullfile(folder_project, 'data', 'aws');
+subjects = {dir(fullfile(folder_brain, 'sub-*')).name};
+subjects = setdiff(subjects, 'sub-S07');  %drop S07 and the 5 subjects from the 5 subject set
 sessions = {dir(fullfile(folder_brain_24subs, subjects{1}, 'ses-*')).name};
 
 selected_regions = 1:length(region_names);
@@ -48,11 +36,7 @@ num_subjects = length(subjects);
 
 %% CV PLS regression across movies for each region and subject
 for s = 1:num_subjects
-    if ismember(subjects{s}, subjects_5)
-        folder_brain = folder_brain_5subs;
-    else
-        folder_brain = folder_brain_24subs;
-    end
+  
     try 
         files_all_movies = {};
         n_trs = {};
@@ -83,7 +67,7 @@ for s = 1:num_subjects
         masked_dat_all_movies = struct();
         for r = selected_regions
             % Apply the mask
-            mask = region_masks{r} %select_atlas_subset(load_atlas('canlab2018'), regions{r});
+            mask = region_masks{r}; %select_atlas_subset(load_atlas('canlab2018'), regions{r});
             masked_dat_all_movies.(region_names{r}) = apply_mask(dat_all_movies, mask);
         end
         clear dat_all_movies;

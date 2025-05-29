@@ -1,11 +1,4 @@
-clear all; close all; clc;
-
-folder_project = fileparts(mfilename('fullpath'));
-%% Add paths (change this to where you have the dependencies installed)
-addpath(genpath('/home/data/eccolab/Code/GitHub/Neuroimaging_Pattern_Masks/'))
-addpath(genpath('/home/data/eccolab/Code/GitHub/CanlabCore'))
-addpath('/home/data/eccolab/Code/GitHub/spm12')
-
+set_up_paths_and_data_directories;
 
 
 components = {'p', 'g'};

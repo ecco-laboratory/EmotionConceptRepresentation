@@ -1,10 +1,4 @@
-clear all; close all; clc;
-
-%% Add paths (change this to where you have the dependencies installed)
-folder_project = fileparts(mfilename('fullpath'));
-addpath(genpath('/home/data/eccolab/Code/GitHub/Neuroimaging_Pattern_Masks/'))
-addpath(genpath('/home/data/eccolab/Code/GitHub/CanlabCore'))
-addpath('/home/data/eccolab/Code/GitHub/spm12')
+set_up_paths_and_data_directories;
 
 stim_names = {
 'After_The_Rain', 'Between_Viewings', 'Big_Buck_Bunny', 'Chatter', 'Damaged_Kung_Fu', ...
@@ -22,10 +16,11 @@ behTab = beh_data.behTab;
 emotions_category = {'Anger', 'Anxiety', 'Fear', 'Surprise', 'Guilt', 'Disgust', ...
 'Sad', 'Regard', 'Satisfaction', 'WarmHeartedness', 'Happiness', ...
 'Pride', 'Love'};
+
 % Subset ratings to only include emotion categories
 behTab_category = structfun(@(tbl) tbl(:, emotions_category(ismember(emotions_category, tbl.Properties.VariableNames))), behTab, 'UniformOutput', false);
-%behTab_category = shuffleTableCategories(behTab_category);
 label_names = behTab_category.(bids_task_names{1}).Properties.VariableNames;
+
 %ensure category names are in the same order for all movies
 for t = 2:length(bids_task_names)
     assert(isequal(label_names, behTab_category.(bids_task_names{t}).Properties.VariableNames), 'Category names are not the same for all movies');
@@ -39,7 +34,7 @@ num_movies = length(used_movies);
 walk_random_seed = 42;
 num_walkers = 10;
 
-TEM_iterations = {42000};%{40000, 32000, 50000};% 50000
+TEM_iterations = {32000};%{40000, 32000, 50000};% 50000
 
 walkers = arrayfun(@(x) ['randomWalker' num2str(x)], 0:(num_walkers-1), 'UniformOutput', false);
 
@@ -69,22 +64,11 @@ region_masks = {fullfile(folder_project, 'masks', 'HC_Julich.nii.gz'),...
                 select_atlas_subset(brain_atlas, {'Ctx_10','Ctx_11','Ctx_14','Ctx_25','Ctx_32', 'a24_'})};
 region_names = {'Hippocampus', 'EntorhinalCortex', 'vmPFC'};
 
-%{
-region_masks = {fullfile(folder_project, 'masks', 'HC_ant_Julich.nii'),...
-                fullfile(folder_project, 'masks', 'HC_post_Julich.nii')};
-region_names = {'anteriorHippocampus', 'posteriorHippocampus'};
-%}
-
 
 % Brain folder should go directly to the folder containing the subject subfolders (change this to where you have the data)
-folder_brain_5subs = fullfile(folder_project, 'data', 'aws');
-subjects_5 = {'sub-S22', 'sub-S25', 'sub-S26', 'sub-S29', 'sub-S32'};
-folder_brain_24subs = '/home/data/eccolab/OpenNeuro/ds004892/derivatives/preprocessing/';
-subjects_24 = {dir(fullfile(folder_brain_24subs, 'sub-*')).name};
-%subjects_24 = setdiff(subjects_24, [subjects_5, 'sub-S07', 'sub-S01']);  
-subjects_24 = setdiff(subjects_24, [subjects_5, 'sub-S07']);%drop S07 and the 5 subjects from the 5 subject set
-subjects = [subjects_24, subjects_5];
-sessions = {dir(fullfile(folder_brain_24subs, subjects{1}, 'ses-*')).name};
+subjects = {dir(fullfile(folder_brain, 'sub-*')).name};
+subjects = setdiff(subjects, 'sub-S07');%drop S07 
+sessions = {dir(fullfile(folder_brain, subjects{1}, 'ses-*')).name};
 
 
 selected_regions = 1:length(region_masks);
@@ -92,11 +76,7 @@ num_regions = length(selected_regions);
 num_subjects = length(subjects);
 
 for s = 1:num_subjects
-    if ismember(subjects{s}, subjects_5)
-        folder_brain = folder_brain_5subs;
-    else
-        folder_brain = folder_brain_24subs;
-    end
+    
     try 
         %% Get nifti file paths for all movies
         files_all_movies = {};

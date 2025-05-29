@@ -1,11 +1,4 @@
-clear all; close all; clc;
-
-%% Add paths (change this to where you have the dependencies installed)
-folder_project = fileparts(mfilename('fullpath'));
-addpath(genpath('/home/data/eccolab/Code/GitHub/Neuroimaging_Pattern_Masks/'))
-addpath(genpath('/home/data/eccolab/Code/GitHub/CanlabCore'))
-addpath('/home/data/eccolab/Code/GitHub/spm12')
-
+set_up_paths_and_data_directories;
 
 emo_types = {'category','binary_valence_arousal', 'valence_arousal'};
 emotions_category = {'Anger', 'Anxiety', 'Fear', 'Surprise', 'Guilt', 'Disgust', ...

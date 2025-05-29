@@ -1,4 +1,5 @@
-folder_project = fileparts(mfilename('fullpath'));
+set_up_paths_and_data_directories;
+
 beh_data = load(fullfile(folder_project, 'data', 'BehavioralRatingsPerVideoAndDim.mat'));
 behTab = beh_data.behTab;
 
