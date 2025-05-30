@@ -32,7 +32,7 @@ region_names = {'Hippocampus', 'EntorhinalCortex', 'vmPFC_a24_included', 'anteri
 
 % Brain folder should go directly to the folder containing the subject subfolders (change this to where you have the data)
 subjects = {dir(fullfile(folder_brain, 'sub-*')).name};
-subjects = setdiff(subjects, 'sub-S07');  %drop S07 and the 5 subjects from the 5 subject set
+subjects = setdiff(subjects, 'sub-S07');  %drop S07 
 sessions = {dir(fullfile(folder_brain, subjects{1}, 'ses-*')).name};
 
 selected_regions = 1:length(region_names);
@@ -52,11 +52,6 @@ emotion_types = {'valence_arousal', 'binary_valence_arousal'};%{'category', 'bin
 %% CV PLS regression across movies for each region and subject
 % Loop through regions and subjects
 for s = 1:num_subjects
-    if ismember(subjects{s}, subjects_5)
-        folder_brain = folder_brain_5subs;
-    else
-        folder_brain = folder_brain_24subs;
-    end
     try 
         files_all_movies = {};
         n_trs = {};
