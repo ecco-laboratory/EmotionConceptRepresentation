@@ -45,4 +45,4 @@ Once you have dependencies on your MATLAB path, and downloaded the fMRI data to 
 
 or to predict activation in TEM agents
 
-<pre><code>matlab "run('fit_category_decoding_models_brain_generalize_across_movies.m')</code></pre>
+<pre><code>matlab "run('fit_decoding_models_brainToTEM_generalize_across_movies.m')</code></pre>
