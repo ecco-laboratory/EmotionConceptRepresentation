@@ -65,7 +65,7 @@ region_masks = {fullfile(folder_project, 'masks', 'HC_Julich.nii.gz'),...
 region_names = {'Hippocampus', 'EntorhinalCortex', 'vmPFC'};
 
 
-% Brain folder should go directly to the folder containing the subject subfolders (change this to where you have the data)
+% Brain folder should go directly to the folder containing the subject subfolders 
 subjects = {dir(fullfile(folder_brain, 'sub-*')).name};
 subjects = setdiff(subjects, 'sub-S07');%drop S07 
 sessions = {dir(fullfile(folder_brain, subjects{1}, 'ses-*')).name};
