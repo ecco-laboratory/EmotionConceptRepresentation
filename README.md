@@ -3,8 +3,9 @@ It is well established that humans conceptualize emotion concepts in a low-dimen
 
 In this project we tested several predictions of this hypothesis using a computational model of relational memory (the Tolman Eichenbaum Machine; [TEM](https://www.sciencedirect.com/science/article/pii/S009286742031388X)) and fMRI data collected as participants viewed a series of [emotional films](https://www.nature.com/articles/s41597-025-04803-5). Probing the information content of the hippocampus, entorhinal cortex, and prefontal cortex, we use multivariate decoding to predict normative [emotion self-report](https://openneuro.org/datasets/ds004872/versions/1.0.3) and representations used by TEM to learn the structure of the environment. A more detailed description of this work will be made available as a preprint shortly. This repository provides the source code used to conduct these analyses.
 
-
-![alt text](https://github.com/EmotionConceptRepresentation/tree/master/images/EmotionConceptMapping.png?raw=true)
+<p align="center">
+<img src="https://github.com/ecco-laboratory/EmotionConceptRepresentation/blob/master/images/EmotionConceptMapping.png" width="800">
+</p>
 
 
 
