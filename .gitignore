@@ -22,3 +22,7 @@ lme_permutation_selfreport.R
 lme_permutation_selfreport_aphc.R
 lme_permutation_it42000.R
 lme_permutation_it50000.R
+lme_effectsize.R
+lme_effectsize_selfreport.R
+lme_effectsize_it42000.R
+lme_effectsize_it50000.R
