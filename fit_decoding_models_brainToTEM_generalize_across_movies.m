@@ -76,7 +76,6 @@ num_regions = length(selected_regions);
 num_subjects = length(subjects);
 
 for s = 1:num_subjects
-    
     try 
         %% Get nifti file paths for all movies
         files_all_movies = {};
