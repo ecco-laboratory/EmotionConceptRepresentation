@@ -78,7 +78,7 @@ region_names = {'anteriorHippocampus', 'posteriorHippocampus'};
 
 % Brain folder should go directly to the folder containing the subject subfolders (change this to where you have the data)
 subjects = {dir(fullfile(folder_brain, 'sub-*')).name};
-subjects_24 = setdiff(subjects, 'sub-S07');%drop S07 and the 5 subjects from the 5 subject set
+subjects = setdiff(subjects, 'sub-S07');%drop S07 
 sessions = {dir(fullfile(folder_brain, subjects{1}, 'ses-*')).name};
 
 
@@ -87,11 +87,6 @@ num_regions = length(selected_regions);
 num_subjects = length(subjects);
 
 for s = 1:num_subjects
-    if ismember(subjects{s}, subjects_5)
-        folder_brain = folder_brain_5subs;
-    else
-        folder_brain = folder_brain_24subs;
-    end
     try 
         %% Get nifti file paths for all movies
         files_all_movies = {};
