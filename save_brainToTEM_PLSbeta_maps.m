@@ -56,9 +56,9 @@ region_masks = {fullfile(folder_project, 'masks', 'HC_Julich.nii.gz'),...
                 select_atlas_subset(brain_atlas, {'Ctx_10','Ctx_11','Ctx_14','Ctx_25','Ctx_32', 'a24_'})};
 region_names = {'Hippocampus', 'EntorhinalCortex', 'vmPFC'};
 
-% Brain folder should go directly to the folder containing the subject subfolders (change this to where you have the data)
-subjects = {dir(fullfile(folder_brain_24subs, 'sub-*')).name};
-subjects = setdiff(subjects, 'sub-S07');%drop S07 and the 5 subjects from the 5 subject set
+% Brain folder should go directly to the folder containing the subject subfolders 
+subjects = {dir(fullfile(folder_brain, 'sub-*')).name};
+subjects = setdiff(subjects, 'sub-S07');%drop S07 
 sessions = {dir(fullfile(folder_brain, subjects{1}, 'ses-*')).name};
 
 
@@ -69,7 +69,6 @@ num_subjects = length(subjects);
 tv = struct(); 
 subjnames = struct();
 for s = 1:num_subjects
-    
     try 
         %% Get nifti file paths for all movies
         files_all_movies = {};
