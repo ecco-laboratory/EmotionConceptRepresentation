@@ -40,6 +40,7 @@ Running this script to train the model should take approximately 10 minutes to s
 # fMRI Decoding
 
 Once you have dependencies on your MATLAB path, and downloaded the fMRI data to the ./data/ directory, you can run the following command to perform decoding analyses.
+<pre><code>matlab "run('fit_2dtraj_decoding_models_brain_generalize_across_movies.m')"</code></pre>
 
 <pre><code>matlab "run('fit_category_decoding_models_brain_generalize_across_movies.m')"</code></pre>
 
