@@ -1,12 +1,11 @@
 set_up_paths_and_data_directories;
 
-emo_types = {'category','binary_valence_arousal', 'valence_arousal'};
-emotions_category = {'Anger', 'Anxiety', 'Fear', 'Surprise', 'Guilt', 'Disgust', ...
-                    'Sad', 'Regard', 'Satisfaction', 'WarmHeartedness', 'Happiness', ...
-                    'Pride', 'Love'};
+emo_types = {'2dtrajMDS'};%{'category','binary_valence_arousal', 'valence_arousal'};
+emotions_category = {'Anger', 'Anxiety', 'Fear', 'Surprise', 'Guilt', 'Disgust', 'Sad', 'Regard', 'Satisfaction', 'WarmHeartedness', 'Happiness', 'Pride', 'Love'};
 emotions_valence_arousal = {'Good', 'Bad', 'Calm', 'AtEase'};
+mds_corrd = {'mds1','mds2'};
 regions = {'Hippocampus', 'EntorhinalCortex','vmPFC'};
-map_dir = fullfile(folder_project,'outputs','brain_weight_maps','PLSbeta','brainToRatings');
+map_dir = fullfile(folder_project,'outputs','brain_weight_maps','PLSbeta','2dtrajMDS');%'brainToRatings');
 thres = {'FDR05','UNC05'};
 for i = 1:length(regions)
     region = regions{i};
@@ -14,6 +13,8 @@ for i = 1:length(regions)
         emo_type = emo_types{j};
         if strcmp(emo_type, 'category')
             emotions = emotions_category;
+        elseif strcmp(emo_type, '2dtrajMDS')
+            emotions = mds_corrd;
         else
             emotions = emotions_valence_arousal;
         end
