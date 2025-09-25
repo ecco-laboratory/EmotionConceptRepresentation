@@ -3,6 +3,16 @@ data/aws
 outputs/*
 !outputs/TEM_activation/across_movies/MDSseed121/iteration32000/walkRandomSeed42/
 !outputs/TEM_activation/across_movies/MDSseed121/iteration32000/walkRandomSeed42/**
+!outputs/rep3/ratings_prediction_performance/brain/category/
+!outputs/rep3/ratings_prediction_performance/brain/category/**
+!outputs/rep3/ratings_prediction_performance/brain/valence_arousal/
+!outputs/rep3/ratings_prediction_performance/brain/valence_arousal/**
+!outputs/rep3/ratings_prediction_performance/brain/2dtrajMDS/
+!outputs/rep3/ratings_prediction_performance/brain/2dtrajMDS/**
+!outputs/rep3/ratings_prediction_performance/brain/binary_valence_arousal/
+!outputs/rep3/ratings_prediction_performance/brain/binary_valence_arousal/**
+!outputs/rep3/ratings_prediction_performance/brainToTEM/MDSseed121/iteration32000/walkRandomSeed42/
+!outputs/rep3/ratings_prediction_performance/brainToTEM/MDSseed121/iteration32000/walkRandomSeed42/**
 masks/
 sbatch_scripts/
 /ignore
