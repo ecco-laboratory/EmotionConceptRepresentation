@@ -18,11 +18,9 @@ The MATLAB interface used for creating TEM environments is available [here](http
 
 Code for training TEM is adapted from [here](https://github.com/jbakermans/torch_tem) (python >= 3.6.0 and pytorch >= 1.6.0 required).
 
-The code requires both [PyTorch](https://pytorch.org/) and [Tensorboard](https://www.tensorflow.org/tensorboard) to run.
+The code requires both [PyTorch](https://pytorch.org/) and [Tensorboard](https://www.tensorflow.org/tensorboard) to run. Installation should take approximately 5 minutes to run.
 
 Analyses were performed using MATLAB R2024a on Ubuntu 20.04.6 LTS (Focal Fossa).
-
-Installation should take approximately 5 minutes to run.
 
 ## Acquiring the fMRI Dataset
 The Emo-FilM fMRI data ([Morgenroth et al., 2025](https://www.nature.com/articles/s41597-025-04803-5)) can be downloaded by running
