@@ -100,10 +100,10 @@ random.seed(walk_random_seed)
 n_random_walkers = 29
 # Make list of all the environments that this model was trained on
 envs_dir = './TEMenvs/emofilm/'
-envs = list(glob.glob(envs_dir + '11x11_13categories_MDSseed468_14brainmovies.json'))#list(glob.glob(envs_dir + '*.json'))
+envs = list(glob.glob(envs_dir + '11x11_13categories_MDSseed121_14brainmovies.json'))#list(glob.glob(envs_dir + '*.json'))
 tem_dir = './TEMcode'
 
-result_folder = os.path.join('.', 'outputs', 'TEM_activation', 'across_movies', 'MDSseed468')
+result_folder = os.path.join('.', 'outputs', 'TEM_activation', 'across_movies', 'MDSseed121')
 os.makedirs(result_folder, exist_ok=True)
 
 for walker in range(n_random_walkers):
