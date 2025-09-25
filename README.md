@@ -39,7 +39,10 @@ Running this script to train the model should take approximately 10 minutes to s
 
 # fMRI Decoding
 
-Once you have dependencies on your MATLAB path, and downloaded the fMRI data to the ./data/ directory, you can run the following command to perform decoding analyses.
+Small demo data (from one subject) can be downloaded from [derivatives/preprocessing/sub-S01](https://openneuro.org/datasets/ds004892/versions/1.0.1) and placed to the `./data` directory.
+
+Once you have dependencies on your MATLAB path, and downloaded the fMRI data to the `./data/` directory, you can run the following command to perform decoding analyses.
+
 <pre><code>matlab "run('fit_2dtraj_decoding_models_brain_generalize_across_movies.m')"</code></pre>
 
 <pre><code>matlab "run('fit_category_decoding_models_brain_generalize_across_movies.m')"</code></pre>
@@ -47,3 +50,12 @@ Once you have dependencies on your MATLAB path, and downloaded the fMRI data to 
 or to predict activation in TEM agents
 
 <pre><code>matlab "run('fit_decoding_models_brainToTEM_generalize_across_movies.m')"</code></pre>
+
+The scripts produce `.csv` files with prediction-outcome correlations. 
+The output includes:
+
+- Prediction–outcome correlations for all target variables
+- Columns identifying the subject and brain region
+- For TEM predictions, additional columns describing the model components
+
+Results are expected to begin writing to file after ~20 minutes.
