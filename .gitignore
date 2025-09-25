@@ -1,7 +1,7 @@
 data/aws
 .vscode/
 outputs/*
-!outputs/TEM_activation/across_movies/MDSseed121/iteration32000/walkRandomSeed42
+!outputs/TEM_activation/across_movies/MDSseed121/iteration32000/walkRandomSeed42/
 !outputs/TEM_activation/across_movies/MDSseed121/iteration32000/walkRandomSeed42/**
 masks/
 sbatch_scripts/
