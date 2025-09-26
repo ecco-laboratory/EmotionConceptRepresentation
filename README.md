@@ -28,7 +28,7 @@ The Emo-FilM fMRI data ([Morgenroth et al., 2025](https://www.nature.com/article
 
 ## Example Usage
 
-# Training TEM
+### Training TEM
 Once you have the dependencies installed on your machine, to train the TEM model, navigate to the following directory:
 <pre><code>cd TEMcode/</code></pre> 
 
@@ -37,7 +37,7 @@ Then run the following command:
 
 Running this script to train the model should take approximately 10 minutes to start generating output.
 
-# fMRI Decoding
+### fMRI Decoding
 
 Small demo data (from one subject) can be downloaded from [derivatives/preprocessing/sub-S01](https://openneuro.org/datasets/ds004892/versions/1.0.1) and placed to the `./data` directory.
 
@@ -56,7 +56,7 @@ Can be found in ./outputs/rep3/ratings_prediction_performance.
 
 Results are expected to begin writing to file after ~20 minutes.
 
-## Pseudocode summary of analyses
+### Pseudocode summary of analyses
 
 1. **Compute timeseries of target variables**  
    - Derive locations in affective space from multidimensional scaling of category ratings (`create_MDS_traj.ipynb`).  
