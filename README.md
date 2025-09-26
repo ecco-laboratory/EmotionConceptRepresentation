@@ -55,7 +55,7 @@ The scripts produce `.csv` files with prediction-outcome correlations which be f
 
 Results are expected to begin writing to file after ~20 minutes.
 
-### Pseudocode summary of analyses
+## Pseudocode summary of analyses
 
 1. **Compute timeseries of target variables**  
    - Derive locations in affective space from multidimensional scaling of category ratings (`create_MDS_traj.ipynb`). 
