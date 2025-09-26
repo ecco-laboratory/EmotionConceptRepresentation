@@ -58,14 +58,18 @@ Results are expected to begin writing to file after ~20 minutes.
 ### Pseudocode summary of analyses
 
 1. **Compute timeseries of target variables**  
-   - Derive locations in affective space from multidimensional scaling of category ratings (`create_MDS_traj.ipynb`).  
-   - Generate TEM environment for emotion concepts (`create_TEM_env.ipynb`).  
+   - Derive locations in affective space from multidimensional scaling of category ratings (`create_MDS_traj.ipynb`). 
+      - Output: `./data/mds_2d.json` 
+   - Generate TEM environment for emotion concepts (`create_TEM_env.ipynb`).
+      - Output: `./TEMenvs/emofilm/11x11_13categories_MDSseed121_14brainmovies.json`  
    - Extract TEM activations (`get_TEM_activations.py`).  
+      - Output: `./outputs/TEM_activation/`
 
 2. **Perform PLS decoding**  
    - Predict emotion categories and valence–arousal ratings (`fit_category_decoding_models_brain_generalize_across_movies.m`).  
    - Predict locations in affective space (`fit_2dtraj_decoding_models_brain_generalize_across_movies.m`).  
    - Predict TEM activations (`fit_decoding_models_brainToTEM_generalize_across_movies.m`).  
+      - Output: `./outputs/rep3/ratings_prediction_performance/`
 
 3. **Evaluate results**  
    - Plot decoding performance (`plot_performance.ipynb`).  
