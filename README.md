@@ -51,8 +51,7 @@ or to predict activation in TEM agents
 
 <pre><code>matlab "run('fit_decoding_models_brainToTEM_generalize_across_movies.m')"</code></pre>
 
-The scripts produce `.csv` files with prediction-outcome correlations
-Can be found in ./outputs/rep3/ratings_prediction_performance.
+The scripts produce `.csv` files with prediction-outcome correlations which be found under `./outputs/rep3/ratings_prediction_performance/`.
 
 Results are expected to begin writing to file after ~20 minutes.
 
