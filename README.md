@@ -20,7 +20,7 @@ Code for training TEM is adapted from [here](https://github.com/jbakermans/torch
 
 The code requires both [PyTorch](https://pytorch.org/) and [Tensorboard](https://www.tensorflow.org/tensorboard) to run. Installation should take approximately 5 minutes to run.
 
-Analyses were performed using MATLAB R2024a on Ubuntu 20.04.6 LTS (Focal Fossa).
+Analyses were performed using MATLAB R2024a on Ubuntu 20.04.6 LTS (Focal Fossa). No non-standard or specialized hardware was required. A GPU can speed up PyTorch training of the TEM model but is not required.
 
 ## Acquiring the fMRI Dataset
 The Emo-FilM fMRI data ([Morgenroth et al., 2025](https://www.nature.com/articles/s41597-025-04803-5)) can be downloaded by running
@@ -41,7 +41,7 @@ Running this script to train the model should take approximately 10 minutes to s
 
 Small demo data (from one subject) can be downloaded from [derivatives/preprocessing/sub-S01](https://openneuro.org/datasets/ds004892/versions/1.0.1) and placed to the `./data` directory.
 
-Once you have dependencies on your MATLAB path, and downloaded the fMRI data to the `./data/` directory, you can run the following command to perform decoding analyses.
+Once you have dependencies on your MATLAB path, and downloaded the fMRI data to the `./data` directory, you can run the following command to perform decoding analyses.
 
 <pre><code>matlab "run('fit_2dtraj_decoding_models_brain_generalize_across_movies.m')"</code></pre>
 
@@ -51,11 +51,23 @@ or to predict activation in TEM agents
 
 <pre><code>matlab "run('fit_decoding_models_brainToTEM_generalize_across_movies.m')"</code></pre>
 
-The scripts produce `.csv` files with prediction-outcome correlations. 
-The output includes:
-
-- Prediction–outcome correlations for all target variables
-- Columns identifying the subject and brain region
-- For TEM predictions, additional columns describing the model components
+The scripts produce `.csv` files with prediction-outcome correlations
+Can be found in ./outputs/rep3/ratings_prediction_performance.
 
 Results are expected to begin writing to file after ~20 minutes.
+
+## Pseudocode summary of analyses
+
+1. **Compute timeseries of target variables**  
+   - Derive locations in affective space from multidimensional scaling of category ratings (`create_MDS_traj.ipynb`).  
+   - Generate TEM environment for emotion concepts (`create_TEM_env.ipynb`).  
+   - Extract TEM activations (`get_TEM_activations.py`).  
+
+2. **Perform PLS decoding**  
+   - Predict emotion categories and valence–arousal ratings (`fit_category_decoding_models_brain_generalize_across_movies.m`).  
+   - Predict locations in affective space (`fit_2dtraj_decoding_models_brain_generalize_across_movies.m`).  
+   - Predict TEM activations (`fit_decoding_models_brainToTEM_generalize_across_movies.m`).  
+
+3. **Evaluate results**  
+   - Plot decoding performance (`plot_performance.ipynb`).  
+   - Perform statistical analyses (`lme_stats_all.R`).  
